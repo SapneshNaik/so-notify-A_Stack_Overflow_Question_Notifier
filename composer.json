@@ -1,0 +1,14 @@
+{
+    "name": "sapnesh_naik/stack_overflow-notifier",
+    "description": "Get instant notifications whenever a new question is posted on Stack Overflow",
+    "type": "project",
+    "authors": [
+        {
+            "name": "Sapnesh Naik",
+            "email": "sapnesh@kerneldev.com"
+        }
+    ],
+    "require": {
+        "symfony/console": "^4.0"
+    }
+}
