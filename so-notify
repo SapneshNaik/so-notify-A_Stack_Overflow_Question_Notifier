@@ -1,0 +1,39 @@
+#! /usr/bin/env php
+
+<?php
+
+use Symfony\Component\Console\Application;
+
+require 'vendor/autoload.php';
+
+$app = new Application('Stack Overflow - Notifier', '1.0.0');
+
+try
+{
+    $pdo = new PDO('sqlite:db.sqlite');
+
+    $pdo->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
+    $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+    $pdo->exec("CREATE TABLE IF NOT EXISTS tags (
+                    id INTEGER PRIMARY KEY, 
+                    title TEXT)
+               ");
+    $pdo->exec("CREATE TABLE IF NOT EXISTS questions (
+                    id INTEGER PRIMARY KEY, 
+                    question_number TEXT)
+               ");
+}
+catch (Exception $exception)
+{
+    echo 'Could not connect to the database';
+    exit(1);
+}
+
+$dbAdapter = new KernelDev\DatabaseAdapter($pdo);
+
+$app->add(new KernelDev\ShowTag($dbAdapter));
+$app->add(new KernelDev\SubscribeTag($dbAdapter));
+$app->add(new KernelDev\CheckFeed($dbAdapter));
+
+
+$app->run();
