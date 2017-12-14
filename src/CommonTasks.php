@@ -53,24 +53,6 @@ class CommonTasks extends SymfonyCommand
     }
 
     /**
-     * Check if question has already been notified.
-     *
-     * @param OutputInterface $output
-     * @return boolean
-     */
-    protected function checkQuestionStatus($questionNumber)
-    {
-        $tags = $this->database->fetchAll('questions');
-
-        // $table = new Table($output);
-
-        // $table->setHeaders(['Id', 'Tag Name'])
-        //       ->setRows($tags)
-        //       ->render();
-    }
-
-
-    /**
      * Check if the system has internet access.
      *
      * @param OutputInterface $output
@@ -87,7 +69,7 @@ class CommonTasks extends SymfonyCommand
 
             exit(1);
         }
-        return $is_conn;
+        return $this;
     }
 
     /**
@@ -105,8 +87,6 @@ class CommonTasks extends SymfonyCommand
     }
 
 
-    protected function checkField(){
-        $this->database->fetchAll('questions');
 
-    }
+
 }

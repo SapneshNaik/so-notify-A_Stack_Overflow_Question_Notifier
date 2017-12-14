@@ -8,6 +8,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 class SubscribeTag extends CommonTasks
 {
 
+    protected $tag;
     /**
      * Configure the command.
      */
@@ -28,12 +29,25 @@ class SubscribeTag extends CommonTasks
     public function execute(InputInterface $input, OutputInterface $output)
     {
 
-        $this->isConnected($output);
+        $this->isConnected($output)
+             ->isValidTag($output, $input);
+
+        $tag = $this->tag;
+        $this->database->query(
+            'insert into tags(title) values(:tag)',
+            compact('tag')
+        );
+        $this->output($output, 'Subscribed to '.$this->tag.'!', 'info');
+        $this->showTags($output);
+    }
+
+    protected function isValidTag($output, $input)
+    {
         $this->output($output, 'Verifying if the tag is valid...', 'comment');
 
-        $tag = $input->getArgument('name');
+        $this->tag = $input->getArgument('name');
 
-        $feedURL = sprintf("https://stackoverflow.com/feeds/tag?tagnames=".$tag."&sort=newest");
+        $feedURL = sprintf("https://stackoverflow.com/feeds/tag?tagnames=".$this->tag."&sort=newest");
 
         $xml = @simplexml_load_file($feedURL);
 
@@ -42,12 +56,5 @@ class SubscribeTag extends CommonTasks
 
             exit(1);
         }
-
-        $this->database->query(
-            'insert into tags(title) values(:tag)',
-            compact('tag')
-        );
-        $this->output($output, 'Subscribed to '.$tag.'!', 'info');
-        $this->showTags($output);
     }
 }

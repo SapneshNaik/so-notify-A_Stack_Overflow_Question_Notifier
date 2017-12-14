@@ -45,14 +45,10 @@ class DatabaseAdapter
         return $this->connection->prepare($sql)->execute($parameters);
     }
 
-    // protected function persist($item_value, $item_type, $table)
-    // {
-    //     $IDq = $this->connection->query("SELECT * FROM ".$table." WHERE ".$item_type."= '".$item_value."'");
-    //     $IDf = $IDq->fetch();
-    //     if ($IDf[$item_type]) {
-    //         return true;
-    //     } else {
-    //         return false;
-    //     }
-    // }
+    public function checkField($questionNumber)
+    {
+        return $this->connection->query("SELECT * FROM questions WHERE question_number= '$questionNumber'")->fetchAll();
+    }
+
+    
 }

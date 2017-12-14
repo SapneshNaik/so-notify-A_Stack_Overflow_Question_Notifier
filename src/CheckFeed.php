@@ -11,6 +11,9 @@ class CheckFeed extends CommonTasks
 
 
     private $questionNumber = '';
+    private $questionExists;
+    private $shouldNotify;
+
     /**
      * Configure the command.
      */
@@ -43,14 +46,13 @@ class CheckFeed extends CommonTasks
         foreach ($tagQuestions as $tagQuestion) {
             foreach ($tagQuestion->entry as $entry) {
                 // exec(sprintf('notify-send  "'.$entry->title.'"  "'.$entry->link->attributes()->href.'"'));
-                $this->getQuestionNumber($entry->id)->checkDB();
-             // $datetime = DateTime::createFromFormat('Y-m-d\TH:i:s+', '2013-02-13T08:35:34.195Z');
-             // var_dump($datetime);
-             // echo $cur = DateTime::createFromFormat('Y-m-d\TH:i:s+');
+                $this->getQuestionNumber($entry->id)
+                     ->questionExists()
+                     ->shouldPersist()
+                     ->shouldNotify($entry);
             }
         }
         // foreach ($xml->entry as $key => $entry) {
-        //     // exec(sprintf('notify-send  "'.$entry->title.'"  "'.$entry->link->attributes()->href.'"'));
         //  // $datetime = DateTime::createFromFormat('Y-m-d\TH:i:s+', '2013-02-13T08:35:34.195Z');
         //  // var_dump($datetime);
         //  // echo $cur = DateTime::createFromFormat('Y-m-d\TH:i:s+');
@@ -91,16 +93,42 @@ class CheckFeed extends CommonTasks
         return $this;
     }
 
-    protected function checkField()
+    protected function questionExists()
     {
         
-        $IDq = $this->connection->query("SELECT * FROM questions WHERE question_number= '$this->questionNumber'");
-        $IDq->setFetchMode(PDO::FETCH_ASSOC);
-        $IDf = $IDq->fetch();
-        if ($IDf[$item_type]) {
-            return true;
+        $IDq = $this->database->checkField($this->questionNumber);
+        
+        if (!empty($IDq)) {
+            $this->questionExists =true;
+            return $this;
         } else {
-            return false;
+            $this->questionExists =false;
+            return $this;
+        }
+    }
+
+    protected function shouldPersist()
+    {
+     
+        if (!$this->questionExists) {
+            $questionNumber = $this->questionNumber;
+            $IDq = $this->database->query(
+                'insert into questions(question_number) values(:questionNumber)',
+                compact('questionNumber')
+            );
+            $this->shouldNotify = true;
+        } else {
+            $this->shouldNotify = false;
+        }
+
+        return $this;
+    }
+
+    public function shouldNotify($entry){
+
+        if($this->shouldNotify) {
+            exec(sprintf('notify-send  "'.$entry->title.'"  "'.$entry->link->attributes()->href.'"'));
+
         }
     }
 }
