@@ -45,18 +45,12 @@ class CheckFeed extends CommonTasks
 
         foreach ($tagQuestions as $tagQuestion) {
             foreach ($tagQuestion->entry as $entry) {
-                // exec(sprintf('notify-send  "'.$entry->title.'"  "'.$entry->link->attributes()->href.'"'));
                 $this->getQuestionNumber($entry->id)
                      ->questionExists()
                      ->shouldPersist()
                      ->shouldNotify($entry);
             }
         }
-        // foreach ($xml->entry as $key => $entry) {
-        //  // $datetime = DateTime::createFromFormat('Y-m-d\TH:i:s+', '2013-02-13T08:35:34.195Z');
-        //  // var_dump($datetime);
-        //  // echo $cur = DateTime::createFromFormat('Y-m-d\TH:i:s+');
-        // }
     }
 
     /**
@@ -124,11 +118,11 @@ class CheckFeed extends CommonTasks
         return $this;
     }
 
-    public function shouldNotify($entry){
+    public function shouldNotify($entry)
+    {
 
-        if($this->shouldNotify) {
+        if ($this->shouldNotify) {
             exec(sprintf('notify-send  "'.$entry->title.'"  "'.$entry->link->attributes()->href.'"'));
-
         }
     }
 }
