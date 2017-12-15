@@ -34,7 +34,7 @@ class RemoveTag extends CommonTasks
                 'delete from tags where Id = :Id',
                 compact('Id')
             );
-            $this->output($output, 'Unsubscribed from '.$tag['title'].'!', 'info');
+            $this->output($output, 'Unsubscribed from '.$tag[0]['title'].'!', 'info');
         } else {
             $this->output($output, 'No tag with Id '.$Id.' exists!', 'error');
         }
