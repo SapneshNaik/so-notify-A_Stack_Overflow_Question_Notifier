@@ -13,7 +13,7 @@ class ShowTag extends CommonTasks
      */
     public function configure()
     {
-        $this->setName('show:tags')
+        $this->setName('tag:show')
              ->setDescription('Show all subscribed tags');
     }
 

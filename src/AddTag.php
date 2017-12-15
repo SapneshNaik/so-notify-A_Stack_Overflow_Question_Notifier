@@ -5,7 +5,7 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
-class SubscribeTag extends CommonTasks
+class AddTag extends CommonTasks
 {
 
     protected $tag;
@@ -14,7 +14,7 @@ class SubscribeTag extends CommonTasks
      */
     public function configure()
     {
-        $this->setName('subscribe:tag')
+        $this->setName('tag:add')
              ->setDescription('Subscribe to a new tag')
              ->addArgument('name', InputArgument::REQUIRED, 'Name of the tag');
     }

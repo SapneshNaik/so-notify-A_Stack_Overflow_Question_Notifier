@@ -54,6 +54,11 @@ class DatabaseAdapter
      */
     public function checkField($table, $questionNumber)
     {
-        return $this->connection->query("SELECT * FROM questions WHERE question_number= '$questionNumber'")->fetchAll();
+        return $this->connection->query("SELECT * FROM ".$table." WHERE question_number= '$questionNumber'")->fetchAll();
+    }
+
+    public function checkId($table, $id)
+    {
+        return $this->connection->query("SELECT * FROM ".$table." WHERE id= '$id'")->fetchAll();
     }
 }

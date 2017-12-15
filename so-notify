@@ -32,7 +32,8 @@ catch (Exception $exception)
 $dbAdapter = new KernelDev\DatabaseAdapter($pdo);
 
 $app->add(new KernelDev\ShowTag($dbAdapter));
-$app->add(new KernelDev\SubscribeTag($dbAdapter));
+$app->add(new KernelDev\AddTag($dbAdapter));
+$app->add(new KernelDev\RemoveTag($dbAdapter));
 $app->add(new KernelDev\CheckFeed($dbAdapter));
 
 
