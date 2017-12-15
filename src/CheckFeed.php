@@ -10,8 +10,25 @@ class CheckFeed extends CommonTasks
 {
 
 
+    /**
+     * The current question number.
+     *
+     * @var string
+     */
     private $questionNumber = '';
+
+    /**
+     * A flag to denote if the question already exists.
+     *
+     * @var boolean
+     */
     private $questionExists;
+
+    /**
+     * A flag to denote if the question should be notified.
+     *
+     * @var boolean
+     */
     private $shouldNotify;
 
     /**
@@ -44,17 +61,17 @@ class CheckFeed extends CommonTasks
         }
 
         foreach ($tagQuestions as $tagQuestion) {
-            foreach ($tagQuestion->entry as $entry) {
-                $this->getQuestionNumber($entry->id)
+            foreach ($tagQuestion->entry as $question) {
+                $this->getQuestionNumber($question->id)
                      ->questionExists()
                      ->shouldPersist()
-                     ->shouldNotify($entry);
+                     ->notify($question);
             }
         }
     }
 
     /**
-     * Return RSS feed URL.
+     * Get RSS feed URL.
      *
      * @param OutputInterface $output
      * @return mixed
@@ -79,18 +96,29 @@ class CheckFeed extends CommonTasks
         }
     }
 
-
-    protected function getQuestionNumber($path)
+    /**
+     * Get Question number from question URL.
+     *
+     * @param String $questionURL
+     * @return this
+     */
+    protected function getQuestionNumber($questionURL)
     {
 
-        $this->questionNumber = basename($path);
+        $this->questionNumber = basename($questionURL);
         return $this;
     }
 
+    /**
+     * Check if the question exists in the database.
+     *
+     * @param
+     * @return this
+     */
     protected function questionExists()
     {
         
-        $IDq = $this->database->checkField($this->questionNumber);
+        $IDq = $this->database->checkField('questions', $this->questionNumber);
         
         if (!empty($IDq)) {
             $this->questionExists =true;
@@ -101,6 +129,14 @@ class CheckFeed extends CommonTasks
         }
     }
 
+    /**
+     * Check if the question should be persisted in database
+     * The question is only persisted if it's not already in the database
+     * If the question exists in db then it question has already been notified
+     *
+     * @param
+     * @return this
+     */
     protected function shouldPersist()
     {
      
@@ -118,11 +154,18 @@ class CheckFeed extends CommonTasks
         return $this;
     }
 
-    public function shouldNotify($entry)
+    /**
+     * Send a system notification with question name as title
+     * and a link to the question as the notification summary
+     *
+     * @param string $question
+     * @return this
+     */
+    public function notify($question)
     {
 
         if ($this->shouldNotify) {
-            exec(sprintf('notify-send  "'.$entry->title.'"  "'.$entry->link->attributes()->href.'"'));
+            exec(sprintf('notify-send  "'.$question->title.'"  "'.$question->link->attributes()->href.'"'));
         }
     }
 }

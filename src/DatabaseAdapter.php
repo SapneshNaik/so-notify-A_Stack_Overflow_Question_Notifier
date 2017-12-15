@@ -45,10 +45,15 @@ class DatabaseAdapter
         return $this->connection->prepare($sql)->execute($parameters);
     }
 
-    public function checkField($questionNumber)
+    /**
+     * Check whther a field exists in a table.
+     *
+     * @param $table
+     * @param $questionNumber
+     * @return mixed
+     */
+    public function checkField($table, $questionNumber)
     {
         return $this->connection->query("SELECT * FROM questions WHERE question_number= '$questionNumber'")->fetchAll();
     }
-
-    
 }
