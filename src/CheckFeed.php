@@ -91,6 +91,7 @@ class CheckFeed extends CommonTasks
             return $feedURLs;
         } else {
             $this->output($output, 'You have not subscribed to any tags!! Exiting now..', 'error');
+            // exec(sprintf('notify-send  sad'));
 
             exit(1);
         }

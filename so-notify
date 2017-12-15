@@ -6,11 +6,12 @@ use Symfony\Component\Console\Application;
 
 require 'vendor/autoload.php';
 
-$app = new Application('Stack Overflow - Notifier', '1.0.0');
+$app = new Application('Stack Overflow - Notifier', '@package_version@');
 
 try
 {
-    $pdo = new PDO('sqlite:db.sqlite');
+    $HOME = getenv('HOME');
+    $pdo = new PDO('sqlite:'.$HOME.'/so-notify.sqlite');
 
     $pdo->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
     $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
