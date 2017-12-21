@@ -85,8 +85,4 @@ class CommonTasks extends SymfonyCommand
 
             $output->writeln('<'.$type.'>'.$message.'</'.$type.'>');
     }
-
-
-
-
 }

@@ -50,6 +50,7 @@ class CheckFeed extends CommonTasks
     public function execute(InputInterface $input, OutputInterface $output)
     {
     
+        $this->test();
         $this->isConnected($output);
         $FeedURLs = $this->getFeedURLs($output);
 
@@ -166,7 +167,27 @@ class CheckFeed extends CommonTasks
     {
 
         if ($this->shouldNotify) {
-            exec(sprintf('notify-send  "'.$question->title.'"  "'.$question->link->attributes()->href.'"'));
+            system(sprintf('/usr/bin/notify-send  "'.$question->title.'"  "'.$question->link->attributes()->href.'"'));
         }
+    }
+
+    protected function test()
+    {
+
+        $HOME = getenv('HOME');
+        // $DBUS_PID =(int) shell_exec("ps ax | grep gconfd-2 | grep -v grep | awk '{ print $1 }'");
+        // $NOTIFY_SEND_BIN="/usr/bin/notify-send";
+
+        // $a = "grep -z DBUS_SESSION_BUS_ADDRESS /proc/$DBUS_PID/environ | sed -e s/DBUS_SESSION_BUS_ADDRESS=//";
+        // echo $a;
+        // $DBUS_SESSION= strval(shell_exec($a));
+
+        // $c = sprintf("DBUS_SESSION_BUS_ADDRESS=%s /usr/bin/notify-send \"TITLE\" \"MESSAGE\"", $DBUS_SESSION);
+        if (is_executable('./notify-send.sh')) {
+            system('./notify-send.sh ad dd 2> /dev/null');
+        }
+
+
+        exit();
     }
 }
