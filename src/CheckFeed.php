@@ -32,6 +32,13 @@ class CheckFeed extends CommonTasks
     private $shouldNotify;
 
     /**
+     * Store the path name of the bash script.
+     *
+     * @var string
+     */
+    private $PATH;
+
+    /**
      * Configure the command.
      */
     public function configure()
@@ -50,8 +57,8 @@ class CheckFeed extends CommonTasks
     public function execute(InputInterface $input, OutputInterface $output)
     {
     
-        $this->test();
         $this->isConnected($output);
+        $this->checkNotificationScipt($output);
         $FeedURLs = $this->getFeedURLs($output);
 
         $tagQuestions = array();
@@ -72,7 +79,7 @@ class CheckFeed extends CommonTasks
     }
 
     /**
-     * Get RSS feed URL.
+     * Generate RSS feed URL for added tags.
      *
      * @param OutputInterface $output
      * @return mixed
@@ -101,7 +108,7 @@ class CheckFeed extends CommonTasks
     /**
      * Get Question number from question URL.
      *
-     * @param String $questionURL
+     * @param $questionURL
      * @return this
      */
     protected function getQuestionNumber($questionURL)
@@ -160,34 +167,47 @@ class CheckFeed extends CommonTasks
      * Send a system notification with question name as title
      * and a link to the question as the notification summary
      *
-     * @param string $question
+     * @param $question
      * @return this
      */
     public function notify($question)
     {
 
         if ($this->shouldNotify) {
-            system(sprintf('/usr/bin/notify-send  "'.$question->title.'"  "'.$question->link->attributes()->href.'"'));
+            $command = sprintf('%s "%s" "%s" 2> /dev/null', $this->PATH, $question->title, $question->link->attributes()->href);
+            system($command);
         }
     }
 
-    protected function test()
+    /**
+     * Check if the so-notify.sh file exists. If not download
+     * it from github repository and make it executable.
+     *
+     * @param OutputInterface $output
+     * @return this
+     */
+    protected function checkNotificationScipt(OutputInterface $output)
     {
 
         $HOME = getenv('HOME');
-        // $DBUS_PID =(int) shell_exec("ps ax | grep gconfd-2 | grep -v grep | awk '{ print $1 }'");
-        // $NOTIFY_SEND_BIN="/usr/bin/notify-send";
 
-        // $a = "grep -z DBUS_SESSION_BUS_ADDRESS /proc/$DBUS_PID/environ | sed -e s/DBUS_SESSION_BUS_ADDRESS=//";
-        // echo $a;
-        // $DBUS_SESSION= strval(shell_exec($a));
+        $PATH = $HOME.'/.so-notify.sh';
 
-        // $c = sprintf("DBUS_SESSION_BUS_ADDRESS=%s /usr/bin/notify-send \"TITLE\" \"MESSAGE\"", $DBUS_SESSION);
-        if (is_executable('./notify-send.sh')) {
-            system('./notify-send.sh ad dd 2> /dev/null');
+        if (!file_exists($PATH)) {
+            $this->output($output, 'First Run, Fetching your distribution specfic configuration', 'comment');
+
+            if (!@copy('https://raw.githubusercontent.com/SapneshNaik/stack_overflow-notifier/master/notify-send.sh', $PATH)) {
+                $this->output($output, 'There was an error fetching your distribution specfic configuration!', 'error');
+            } else {
+                $this->output($output, 'Done. Continuing...', 'info');
+            }
         }
 
+        if (!is_executable($PATH)) {
+             chmod($PATH, 0755);
+        }
 
-        exit();
+        $this->PATH = $PATH;
+        return $this;
     }
 }

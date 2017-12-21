@@ -11,7 +11,7 @@ $app = new Application('Stack Overflow - Notifier', '@package_version@');
 try
 {
     $HOME = getenv('HOME');
-    $pdo = new PDO('sqlite:'.$HOME.'/so-notify.sqlite');
+    $pdo = new PDO('sqlite:'.$HOME.'/.so-notify.sqlite');
 
     $pdo->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
     $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
