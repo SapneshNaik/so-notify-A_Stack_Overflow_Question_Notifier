@@ -8,7 +8,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 class UpdateCommand extends Command
 {
-    const MANIFEST_FILE = 'http://mattketmo.github.io/cliph/manifest.json';
+    const MANIFEST_FILE = 'https://raw.githubusercontent.com/SapneshNaik/stack_overflow-notifier/master/src/scripts/manifest.json';
 
     protected function configure()
     {
