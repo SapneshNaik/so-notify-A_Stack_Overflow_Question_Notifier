@@ -1,6 +1,8 @@
-{
+[
+    {
         "name": "so-notify",
         "sha1": "ef4e1b5b667d46b12eb0d08a6656cd8597acbad6",
         "url": "https://github.com/SapneshNaik/stack_overflow-notifier/raw/master/dist/so-notify",
         "version": "v1.0.0"
-}
+    }
+]
