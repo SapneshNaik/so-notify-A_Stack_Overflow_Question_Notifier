@@ -1,8 +1,8 @@
 [
     {
-        "name": "so-norify",
-        "sha1": "fbcded58df0ea838c17d56a5e3cdace56127d538",
-        "url": "http://mattketmo.github.io/cliph/downloads/my-cli-1.1.0.phar",
-        "version": "1.0.1"
+        "name": "so-notify",
+        "sha1": "ef4e1b5b667d46b12eb0d08a6656cd8597acbad6",
+        "url": "https://github.com/SapneshNaik/stack_overflow-notifier/files/1584174/so-notify.gz",
+        "version": "v1.0.0"
     }
 ]
