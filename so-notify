@@ -36,6 +36,7 @@ $app->add(new KernelDev\ShowTag($dbAdapter));
 $app->add(new KernelDev\AddTag($dbAdapter));
 $app->add(new KernelDev\RemoveTag($dbAdapter));
 $app->add(new KernelDev\CheckFeed($dbAdapter));
+$app->add(new KernelDev\UpdateCommand());
 
 
 $app->run();

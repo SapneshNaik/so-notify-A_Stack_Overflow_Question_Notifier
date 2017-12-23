@@ -9,7 +9,8 @@
         }
     ],
     "require": {
-        "symfony/console": "^4.0"
+        "symfony/console": "^4.0",
+        "herrera-io/phar-update": "1.*"
     },
     "autoload": {
         "psr-4": {
