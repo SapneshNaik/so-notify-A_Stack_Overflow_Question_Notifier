@@ -196,7 +196,7 @@ class CheckFeed extends CommonTasks
         if (!file_exists($PATH)) {
             $this->output($output, 'First Run, Fetching your distribution specfic configuration', 'comment');
 
-            if (!@copy('https://raw.githubusercontent.com/SapneshNaik/stack_overflow-notifier/master/notify-send.sh', $PATH)) {
+            if (!@copy('https://raw.githubusercontent.com/SapneshNaik/stack_overflow-notifier/master/src/scripts/notify-send.sh', $PATH)) {
                 $this->output($output, 'There was an error fetching your distribution specfic configuration!', 'error');
             } else {
                 $this->output($output, 'Done. Continuing...', 'info');
