@@ -59,13 +59,23 @@ class CheckFeed extends CommonTasks
     
         $this->isConnected($output);
         $this->checkNotificationScipt($output);
-        $FeedURLs = $this->getFeedURLs($output);
+        $feedURLs = $this->getFeedURLs($output);
+
+        if (empty($feedURLs)) {
+            $this->output($output, 'Error fetching feed. Exiting..', 'error');
+            exit(1);
+        }
 
         $tagQuestions = array();
 
-        foreach ($FeedURLs as $FeedURL) {
-            $xml = @simplexml_load_file($FeedURL);
+        foreach ($feedURLs as $feedURL) {
+            $xml = @simplexml_load_file($feedURL);
             array_push($tagQuestions, $xml);
+        }
+
+        if (empty($tagQuestions)) {
+            $this->output($output, 'Error fetching questions. Exiting..', 'error');
+            exit(1);
         }
 
         foreach ($tagQuestions as $tagQuestion) {
@@ -127,7 +137,7 @@ class CheckFeed extends CommonTasks
     protected function questionExists()
     {
         
-        $IDq = $this->database->checkField('questions', $this->questionNumber);
+        $IDq = $this->database->checkField('questions', 'question_number', $this->questionNumber);
         
         if (!empty($IDq)) {
             $this->questionExists =true;
