@@ -15,6 +15,6 @@
     ],
     "git-version": "package_version",
     "main": "so-notify",
-    "output": "so-notify.phar",
+    "output": "./dist/so-notify.phar",
     "stub": true
 }

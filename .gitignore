@@ -2,3 +2,4 @@
 Build-Command-line-Apps/
 db.sqlite
 so-notify.phar
+dist/
