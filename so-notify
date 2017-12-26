@@ -6,7 +6,7 @@ use Symfony\Component\Console\Application;
 
 require 'vendor/autoload.php';
 
-$app = new Application('Stack Overflow - Notifier', '@package_version@');
+$app = new Application('so-notify - A Stack Overflow Question Notifier.', '@package_version@');
 
 try
 {
