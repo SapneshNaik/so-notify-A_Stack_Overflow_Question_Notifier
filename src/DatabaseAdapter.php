@@ -52,9 +52,9 @@ class DatabaseAdapter
      * @param $questionNumber
      * @return mixed
      */
-    public function checkField($table, $questionNumber)
+    public function checkField($table, $column, $value)
     {
-        return $this->connection->query("SELECT * FROM ".$table." WHERE question_number= '$questionNumber'")->fetchAll();
+        return $this->connection->query("SELECT * FROM ".$table." WHERE $column= '$value'")->fetchAll();
     }
 
     public function checkId($table, $id)

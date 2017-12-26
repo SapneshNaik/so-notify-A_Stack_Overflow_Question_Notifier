@@ -8,7 +8,20 @@ use Symfony\Component\Console\Output\OutputInterface;
 class AddTag extends CommonTasks
 {
 
+    /**
+     * input tag.
+     *
+     * @var string
+     */
     protected $tag;
+
+    /**
+     * A flag to denote if the tag already exists.
+     *
+     * @var boolean
+     */
+    private $tagExists;
+
     /**
      * Configure the command.
      */
@@ -33,6 +46,13 @@ class AddTag extends CommonTasks
              ->isValidTag($output, $input);
 
         $tag = $this->tag;
+
+        if ($this->tagExists()) {
+            $this->output($output, 'Tag '.$this->tag.' already exists!', 'error');
+            exit(1);
+        }
+
+
         $this->database->query(
             'insert into tags(title) values(:tag)',
             compact('tag')
@@ -55,6 +75,23 @@ class AddTag extends CommonTasks
             $this->output($output, 'Invalid Tag!!', 'error');
 
             exit(1);
+        }
+    }
+
+    /**
+     * Check if the tag exists in the database.
+     *
+     * @return this
+     */
+    protected function tagExists()
+    {
+        
+        $IDq = $this->database->checkField('tags', 'title', $this->tag);
+
+        if (!empty($IDq)) {
+            return true;
+        } else {
+            return false;
         }
     }
 }
