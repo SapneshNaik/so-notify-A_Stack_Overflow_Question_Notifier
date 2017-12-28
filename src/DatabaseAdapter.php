@@ -49,7 +49,8 @@ class DatabaseAdapter
      * Check whther a field exists in a table.
      *
      * @param $table
-     * @param $questionNumber
+     * @param $column
+     * @param $value
      * @return mixed
      */
     public function checkField($table, $column, $value)
@@ -57,8 +58,26 @@ class DatabaseAdapter
         return $this->connection->query("SELECT * FROM ".$table." WHERE $column= '$value'")->fetchAll();
     }
 
+    /**
+     * Check whther a id exists in a table.
+     *
+     * @param $table
+     * @param $id
+     * @return mixed
+     */
     public function checkId($table, $id)
     {
         return $this->connection->query("SELECT * FROM ".$table." WHERE id= '$id'")->fetchAll();
+    }
+
+    /**
+     * get number of rows in a table.
+     *
+     * @param $table
+     * @return mixed
+     */
+    public function getRowCount($table)
+    {
+        return $this->connection->query("SELECT COUNT(*) FROM ".$table)->fetchColumn();
     }
 }

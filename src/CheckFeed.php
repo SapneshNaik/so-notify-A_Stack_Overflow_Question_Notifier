@@ -56,7 +56,6 @@ class CheckFeed extends CommonTasks
      */
     public function execute(InputInterface $input, OutputInterface $output)
     {
-    
         $this->isConnected($output);
         $this->checkNotificationScipt($output);
         $feedURLs = $this->getFeedURLs($output);
@@ -73,18 +72,19 @@ class CheckFeed extends CommonTasks
             array_push($tagQuestions, $xml);
         }
 
-        if (empty($tagQuestions)) {
-            $this->output($output, 'Error fetching questions. Exiting..', 'error');
-            exit(1);
-        }
-
-        foreach ($tagQuestions as $tagQuestion) {
-            foreach ($tagQuestion->entry as $question) {
-                $this->getQuestionNumber($question->id)
-                     ->questionExists()
-                     ->shouldPersist()
-                     ->notify($question);
+        try {
+            foreach ($tagQuestions as $tagQuestion) {
+                foreach ($tagQuestion->entry as $question) {
+                    $this->getQuestionNumber($question->id)
+                         ->questionExists()
+                         ->shouldPersist()
+                         ->notify($question);
+                }
             }
+        } catch (Exception $e) {
+            $this->output($output, 'Error fetching questions. Exiting..', 'error');
+        } finally {
+            $this->trimQuestionsTable($output);
         }
     }
 
@@ -109,8 +109,6 @@ class CheckFeed extends CommonTasks
             return $feedURLs;
         } else {
             $this->output($output, 'You have not subscribed to any tags!! Exiting now..', 'error');
-            // exec(sprintf('notify-send  sad'));
-
             exit(1);
         }
     }
@@ -123,7 +121,6 @@ class CheckFeed extends CommonTasks
      */
     protected function getQuestionNumber($questionURL)
     {
-
         $this->questionNumber = basename($questionURL);
         return $this;
     }
@@ -136,7 +133,6 @@ class CheckFeed extends CommonTasks
      */
     protected function questionExists()
     {
-        
         $IDq = $this->database->checkField('questions', 'question_number', $this->questionNumber);
         
         if (!empty($IDq)) {
@@ -158,7 +154,6 @@ class CheckFeed extends CommonTasks
      */
     protected function shouldPersist()
     {
-     
         if (!$this->questionExists) {
             $questionNumber = $this->questionNumber;
             $IDq = $this->database->query(
@@ -182,11 +177,11 @@ class CheckFeed extends CommonTasks
      */
     public function notify($question)
     {
-
         if ($this->shouldNotify) {
             $command = sprintf('%s "%s" "%s" 2> /dev/null', $this->PATH, $question->title, $question->link->attributes()->href);
             system($command);
         }
+        return $this;
     }
 
     /**
@@ -198,9 +193,7 @@ class CheckFeed extends CommonTasks
      */
     protected function checkNotificationScipt(OutputInterface $output)
     {
-
         $HOME = getenv('HOME');
-
         $PATH = $HOME.'/.so-notify.sh';
 
         if (!file_exists($PATH)) {
@@ -219,5 +212,23 @@ class CheckFeed extends CommonTasks
 
         $this->PATH = $PATH;
         return $this;
+    }
+
+    /**
+     * delete first 50 records for whenever the table rows exceed 100
+     *
+     * @param OutputInterface $output
+     * @return this
+     */
+    protected function trimQuestionsTable(OutputInterface $output)
+    {
+        $val = $this->database->getRowCount('questions');
+        if ($val > 100) {
+            $IDq = $this->database->query(
+                'delete from questions where id in (select id from questions limit 50)',
+                compact('')
+            );
+            $this->output($output, 'Cleaning up database for better performance', 'comment');
+        }
     }
 }
