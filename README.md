@@ -1,4 +1,4 @@
-# stack_overflow-notifier
+# so-notify – A Stack Overflow Question Notifier.
 Get instant notifications whenever a new question is posted on Stack Overflow
 
 ### Prodcut page
