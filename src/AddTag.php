@@ -41,7 +41,6 @@ class AddTag extends CommonTasks
      */
     public function execute(InputInterface $input, OutputInterface $output)
     {
-
         $this->isConnected($output)
              ->isValidTag($output, $input);
 
@@ -72,7 +71,7 @@ class AddTag extends CommonTasks
     {
         $this->output($output, 'Verifying if the tag is valid...', 'comment');
 
-        $this->tag = $input->getArgument('name');
+        $this->tag = strtolower($input->getArgument('name'));
 
         $feedURL = sprintf("https://stackoverflow.com/feeds/tag?tagnames=".$this->tag."&sort=newest");
 
@@ -92,7 +91,6 @@ class AddTag extends CommonTasks
      */
     protected function tagExists()
     {
-        
         $IDq = $this->database->checkField('tags', 'title', $this->tag);
 
         if (!empty($IDq)) {
