@@ -61,6 +61,13 @@ class AddTag extends CommonTasks
         $this->showTags($output);
     }
 
+    /**
+     * Check if the tag is valid.
+     *
+     * @param InputInterface $input
+     * @param OutputInterface $output
+     * @return void
+     */
     protected function isValidTag($output, $input)
     {
         $this->output($output, 'Verifying if the tag is valid...', 'comment');
@@ -79,7 +86,7 @@ class AddTag extends CommonTasks
     }
 
     /**
-     * Check if the tag exists in the database.
+     * Check if the tag already exists in the database.
      *
      * @return this
      */
