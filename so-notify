@@ -26,7 +26,7 @@ try
 }
 catch (Exception $exception)
 {
-    echo 'Could not connect to the database';
+	echo '\n Error: Could not connect to the database: visit https://www.kerneldev.com/2017/12/27/so-notify-a-stack-overflow-question-notifier/ for troubleshooting info';
     exit(1);
 }
 
